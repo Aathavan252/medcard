@@ -23,7 +23,7 @@ const LoginPatient = () => {
     setError('');
 
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login-patient', { phone, password });
+      const response = await axios.post('http://localhost:8080/api/auth/login-patient', { phone, password });
 
       // Store token in localStorage
       localStorage.setItem('token', response.data.token);

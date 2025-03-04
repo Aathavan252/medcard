@@ -23,7 +23,7 @@ const LoginDoctor = () => {
     setError('');
 
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login-doctor', { email, password });
+      const response = await axios.post('http://localhost:8080/api/auth/login-doctor', { email, password });
 
       // Store token in localStorage
       localStorage.setItem('token', response.data.token);

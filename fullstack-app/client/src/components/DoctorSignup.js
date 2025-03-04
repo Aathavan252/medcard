@@ -27,29 +27,18 @@ const SignupDoctor = () => {
     }));
   };
 
-  const validateForm = () => {
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match.");
-      return false;
-    }
-    if (!formData.termsAccepted) {
-      setError("You must accept the terms and conditions.");
-      return false;
-    }
-    // Validate license image type (only jpg, jpeg, png allowed)
-    const validImageTypes = ['image/jpeg', 'image/png'];
-    if (formData.licenseImage && !validImageTypes.includes(formData.licenseImage.type)) {
-      setError("Invalid file type for license image.");
-      return false;
-    }
-    return true;
-  };
-
   const handleSignup = async (e) => {
     e.preventDefault();
     setError('');
-    
-    if (!validateForm()) return;
+
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+    if (!formData.termsAccepted) {
+      setError("You must accept the terms and conditions.");
+      return;
+    }
 
     const signupData = new FormData();
     Object.entries(formData).forEach(([key, value]) => {
@@ -57,12 +46,10 @@ const SignupDoctor = () => {
     });
 
     try {
-      await axios.post('http://localhost:5000/api/auth/signup-doctor', signupData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
+      await axios.post('http://localhost:8080/api/auth/signup-doctor', signupData);
       navigate('/login-doctor');
     } catch (err) {
-      setError(err.response ? err.response.data.message : 'Signup failed');
+      setError(err.response?.data?.message || "Signup failed");
     }
   };
 
@@ -73,7 +60,7 @@ const SignupDoctor = () => {
         <input type="text" name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleChange} required />
         <input type="text" name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange} required />
         <input type="text" name="uniqueId" placeholder="Unique ID" value={formData.uniqueId} onChange={handleChange} required />
-        <input type="date" name="dob" placeholder="Date of Birth" value={formData.dob} onChange={handleChange} required />
+        <input type="date" name="dob" value={formData.dob} onChange={handleChange} required />
         <input type="text" name="admin" placeholder="Hospital Name" value={formData.admin} onChange={handleChange} required />
         <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
         <input type="tel" name="phone" placeholder="Phone Number" value={formData.phone} onChange={handleChange} required />
@@ -86,7 +73,6 @@ const SignupDoctor = () => {
         {error && <p style={{ color: 'red' }}>{error}</p>}
         <button type="submit">Signup</button>
       </form>
-      <p>Already have an account? <a href="/login-doctor">Login</a></p>
     </div>
   );
 };

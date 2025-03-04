@@ -25,7 +25,7 @@ const SignupPatient = () => {
     }
 
     try {
-      await axios.post('http://localhost:5000/api/auth/signup', { 
+      await axios.post('http://localhost:8080/api/auth/signup-patient', { 
         name, 
         phone, 
         password, 
